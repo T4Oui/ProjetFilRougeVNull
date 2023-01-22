@@ -40,7 +40,7 @@ void affrechTextMotClef()
 
 void affrechTextText()
 {
-    printf("\n  ** Recherche Texte par ressemblance **\nTaper le chemin du texte que vous voulez comprarer (sans le .txt):\n");
+    printf("\n  ** Recherche Texte par ressemblance **\nTaper le chemin du texte que vous voulez comprarer (sans le .xml):\n");
 }
 
 void affrechImagRGB()
@@ -251,7 +251,7 @@ void modeUtil()
             case 1:
                 affrechImagImagNB(); // menu recherche image - image - NB
                 scanf("%s", chemin);
-                snprintf(chaine, 256, "cp %s /home/pfr/pfr/texte/recherche_image", chemin);
+                snprintf(chaine, 256, "cp %s /home/pfr/pfr/image/recherche_image", chemin);
                 system(chaine);                                              // chemin + nom_fichier
                 printf("\nQuel est le nom du fichier (sans le chemin) ?\n"); // nom_fichier
                 scanf("%s", chemin);
@@ -280,7 +280,7 @@ void modeUtil()
             case 2:
                 affrechImagImagCoul(); // menu recherche image - image - couleur
                 scanf("%s", chemin);
-                snprintf(chaine, 256, "cp %s /home/pfr/pfr/texte/recherche_image", chemin);
+                snprintf(chaine, 256, "cp %s /home/pfr/pfr/image/recherche_image", chemin);
                 system(chaine); // chemin + nom_fichier
 
                 printf("\nQuel est le nom du fichier (sans le chemin) ?\n"); // nom_fichier
@@ -322,7 +322,7 @@ void modeUtil()
         char chaine[256];
         affrechSon();
         scanf("%s", chemin);
-        snprintf(chaine, 256, "cp %s /home/pfr/pfr/texte/recherche_son", chemin);
+        snprintf(chaine, 256, "cp %s /home/pfr/pfr/son/recherche_son", chemin);
         system(chaine);
         affresultSon();
         scanf("%d", &choix);
