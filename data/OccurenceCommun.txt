@@ -1,2 +1,3 @@
-4 américains 2
-10 américains 3
+5 affiche 2
+23 affiche 2
+34 affiche 2

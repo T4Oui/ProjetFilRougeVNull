@@ -12,33 +12,36 @@ FILE* openFile( const char * nomFichier , const char * m ) // Fonction pour ouvr
   return file ; 
 }
 
-int quantification (int tab[]  , int b , int n )  // Fonction pour faire la quantification qui prend en parametre un tableau et renvoie la nouvelle valeur de pixel 
+int quantification (int tab[] , int b , int n ) // Fonction pour faire la quantification qui prend en parametre un tableau et renvoie la nouvelle valeur de pixel 
 { 
 
-int t[7] ;
-int nouPix = 0 ;
+int t[7] ; 
+int nouPix = 0 ; 
 
 int Nbr = (n *b)-1 ;
-int i = 0;
+int i = 0; 
 while (( i<3) && (Nbr >=0 ))
-    { 
-    int  a = tab[i] ;
-    for (int j = 0 ; j<8 ; j ++)
-    {
-    t[j] = a % 2 ;
-    a = a / 2;
-    } 
-       nouPix   = nouPix + (t[7] * pow(2 , Nbr) )+ (t[6] * pow(2 , Nbr-1)) ;
-       Nbr = Nbr - 2 ;
-       i++ ;
-       }
-    
-    
-    return ( nouPix) ; 
-    } 
-
-
-
+ { 
+ int a = tab[i] ; 
+ for (int j = 0 ; j<8 ; j ++)
+ {
+ t[j] = a % 2 ;
+ a = a / 2;
+ } 
+ if (n ==2)
+ { 
+ nouPix = nouPix + (t[7] * pow(2 , Nbr) )+ (t[6] * pow(2 , Nbr-1)) ;
+ Nbr = Nbr - 2 ;
+ } 
+ else if (n ==3)
+ { nouPix = nouPix + (t[7] * pow(2 , Nbr) )+ (t[6] * pow(2 , Nbr-1)) + (t[5] * pow(2 , Nbr-2)) ;
+ Nbr = Nbr - 3 ;
+ } 
+ i++ ; 
+ }
+ return ( nouPix) ; 
+ 
+ } 
 
  int ** pretraitement_image ( const char* fichier , int * ptrNBLIG , int * ptrNBCOL, int * ptrB  , int n)  // Fonction pour parcourir le fichier et appel la fonction quantification pour chaque pixel 
 { 
@@ -273,6 +276,7 @@ void indexation_image () //Une fonction pour indexer le fichier image qui appell
  char fileName[200] ;
  system("ls /home/pfr/pfr/image/fich_images/txt > /home/pfr/pfr_code/data/listeFichierImage.txt " ); 
  FILE * listeFichier = openFile("/home/pfr/pfr_code/data/listeFichierImage.txt","r") ; 
+  system("rm /home/pfr/pfr/image/descripteurs_images/*.txt");
 
  while ( fscanf ( listeFichier ,"%s",fileName )==1)
  { 

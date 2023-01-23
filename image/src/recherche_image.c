@@ -123,7 +123,7 @@ void remplissagetab (TAB* tableau1,int nbdescripteurs,int noiroublanc)
     }
     else
     {
-        FILE* base_descripteur_image = fopen("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_noiroublanc.txt","r");
+        FILE* base_descripteur_image = fopen("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_NB.txt","r");
         FILE* config = fopen("/home/pfr/pfr_code/config.txt","r");
         int nb=configurationR(config);
 
@@ -267,7 +267,7 @@ void afficher_pourcentage(STRUCTPOURC* tableau2, int nbdescripteurs, float pourc
         {
             if(tableau2[t].pourcentage>pourcentagemini)
             {
-                printf("%d\t%s\t%f\n",tableau2[t].identifiant,tableau2[t].fichier,(tableau2[t]).pourcentage);
+                printf("%s\t%f\n",tableau2[t].fichier,(tableau2[t]).pourcentage);
             }
         
         }
@@ -306,25 +306,43 @@ void remplissagetabpourcent(STRUCTPOURC* tableau2, TAB* tableau1, int nbdescript
 
     }
 }
+
+int comptageNbLigne(char * pathFile){
+
+    int ctpMot=0;
+    char comptageMot[256]={0};
+    //comptage du nombre de mot du fichier passer en paramètre
+    snprintf(comptageMot,sizeof(comptageMot),"wc -l %s > /home/pfr/pfr_code/data/comptage.txt",pathFile);
+    system(comptageMot);
+    
+    //récupération du nombre de mot dans le fichier comptage.txt
+    FILE * comptage = fopen("/home/pfr/pfr_code/data/comptage.txt","r");
+    fscanf(comptage,"%d",&ctpMot);
+    fclose(comptage);
+    return ctpMot;
+}
+
  int nbdenbdescripteurs(int noiroublanc)
  {
     int nbdescripteurs=0;
         if(noiroublanc==0)
     {
-        FILE* base_descripteur_image=fopen("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_couleur.txt","r");
-        nbdescripteurs=compterlignes(base_descripteur_image);//récupère le nb de lignes cad le nb de descripteur
+        //FILE* base_descripteur_image=fopen("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_couleur.txt","r");
+        //nbdescripteurs=compterlignes(base_descripteur_image);//récupère le nb de lignes cad le nb de descripteur
+        nbdescripteurs = comptageNbLigne("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_couleur.txt");
        // printf("%d",nbdescripteurs);
        // printf("Hello world\n\n\n");
 
         //printf("%d\n\n\n",nbdescripteurs);
-        fclose(base_descripteur_image);
+        //fclose(base_descripteur_image);
     }
     else
     {
-        FILE* base_descripteur_noiroublanc=fopen("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_noiroublanc.txt","r");
-        nbdescripteurs=compterlignes(base_descripteur_noiroublanc);
+        nbdescripteurs = comptageNbLigne("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_NB.txt");
+        //FILE* base_descripteur_noiroublanc=fopen("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_noiroublanc.txt","r");
+        //nbdescripteurs=compterlignes(base_descripteur_noiroublanc);
         //printf("%d\n\n\n",nbdescripteurs);
-        fclose(base_descripteur_noiroublanc);
+        //fclose(base_descripteur_noiroublanc);
 
     }
     return nbdescripteurs;
@@ -367,11 +385,12 @@ void remplissagetabpourcent(STRUCTPOURC* tableau2, TAB* tableau1, int nbdescript
 
 void recherchenoiretblanc(int fichierrecherche, float pourcentagemini,char* fichier)
 {
-    FILE* config = fopen("./.config","r");
+    FILE* config = fopen("/home/pfr/pfr_code/config.txt","r");
     int noiroublanc=1;
     int nbdescripteurs=0;
     int bit_config=0;
     nbdescripteurs=nbdenbdescripteurs(noiroublanc);
+    
     TAB* tableau1=(TAB*)malloc(sizeof(struct TAB)*(nbdescripteurs)); //crée un tableau de la taille nombre de 
     bit_config=configurationR(config);
     tableau1->nb_valeur=tab_taille_couleur(bit_config,noiroublanc);
@@ -394,7 +413,7 @@ void recherchenoiretblanc(int fichierrecherche, float pourcentagemini,char* fich
 }
 void recherchecouleur(int fichierrecherche, float pourcentagemini, char* fichier)
 {
-    FILE* config = fopen("./.config","r");
+    FILE* config = fopen("/home/pfr/pfr_code/config.txt","r");
     int noiroublanc=0;
     int nbdescripteurs=0;
     int bit_config=0;
@@ -448,7 +467,7 @@ void recupfichier_couleur (STRUCTPOURC* tab,int nbdescripteurs)
 
 void recupfichier_noiroublanc (STRUCTPOURC* tab,int nbdescripteurs)
 {
-    FILE *fich = fopen("/home/pfr/pfr/image/descripteurs_images/base_image_noirblanc.txt", "r");
+    FILE *fich = fopen("/home/pfr/pfr/image/descripteurs_images/base_image_NB.txt", "r");
     int id_courant=0;
             for(int i=0;i<nbdescripteurs;i++)
             {
@@ -471,27 +490,36 @@ void recupfichier_noiroublanc (STRUCTPOURC* tab,int nbdescripteurs)
 
 
 void open_image_coul(char * fichier){
-    char chaine[150] = {0};
+    char chaine[256] = {0};
     char nomfich[150];
-    FILE * file=fopen("/home/pfr/pfr_code_ambre/data/nfich_rech","a");
-    fprintf(file,"%s",fichier);
-    system("sed -e 's/.txt// /home/pfr/pfr_code_ambre/data/nfich_rech");
-    FILE * fich =fopen("/home/pfr/pfr_code_ambre/data/nfich_rech","r");
+    char changerNom[256]={0};
+    int ret = snprintf(changerNom,sizeof(changerNom),"echo '%s' > /home/pfr/pfr_code/data/nfich_rech.txt ",fichier);
+    if(ret<0){
+        abort();
+    } else system(changerNom);
+    system("sed -i -e 's/txt/jpg/g' /home/pfr/pfr_code/data/nfich_rech.txt");
+    FILE * fich =fopen("/home/pfr/pfr_code/data/nfich_rech.txt","r");
     fscanf(fich,"%s",nomfich);
-    snprintf(chaine,250,"display /home/pfr/pfr/image/fich_images/%s.jpg",nomfich);
-    system(chaine);
-    fclose(file);
+    ret = snprintf(chaine,sizeof(chaine),"display /home/pfr/pfr/image/fich_images/%s",nomfich);
+    if(ret<0){
+        abort();
+    } else system(chaine);
+    fclose(fich);
 }
 
 void open_image_nb(char * fichier){
-    char chaine[150] = {0};
+    char chaine[256] = {0};
     char nomfich[150];
-    FILE * file=fopen("/home/pfr/pfr_code_ambre/data/nfich_rech","a");
-    fprintf(file,"%s",fichier);
-    system("sed -e 's/.txt// /home/pfr/pfr_code_ambre/data/nfich_rech");
-    FILE * fich =fopen("/home/pfr/pfr_code_ambre/data/nfich_rech","r");
+    char changerNom[256]={0};
+    int ret = snprintf(changerNom,sizeof(changerNom),"echo '%s' > /home/pfr/pfr_code/data/nfich_rech.txt ; sed -i -e 's/txt/bmp/g' /home/pfr/pfr_code/data/nfich_rech.txt",fichier);
+    if(ret<0){
+        abort();
+    } else system(changerNom);
+    FILE * fich =fopen("/home/pfr/pfr_code/data/nfich_rech.txt","r");
     fscanf(fich,"%s",nomfich);
-    snprintf(chaine,250,"xdg-open /home/pfr/pfr/image/fich_images/%s.txt",nomfich);
-    system(chaine);
-    fclose(file);
+    ret = snprintf(chaine,sizeof(chaine),"viewnior /home/pfr/pfr/image/fich_images/%s",nomfich);
+    if(ret<0){
+        abort();
+    } else system(chaine);
+    fclose(fich);
 }

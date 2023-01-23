@@ -48,6 +48,7 @@ void recupfichier_couleur (STRUCTPOURC* tab, int nbdescripteurs);
 void recupfichier_noiroublanc (STRUCTPOURC* tab,int nbdescripteurs);
 void open_image_coul(char * fichier);
 void open_image_nb(char * fichier);
+int comptageNbLigne(char * pathFile);
 
 
 

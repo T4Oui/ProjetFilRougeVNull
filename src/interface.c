@@ -67,35 +67,38 @@ void affresultMotClef(char *mot)
 {
     printf("\n  ** Resultats trouvés pour la recherche '%s' **\n", mot);
     rech_MC(mot);
-    printf("\n Taper 1 pour ouvrir le premier fichier\n");
+    //printf("\n Taper 1 pour ouvrir le premier fichier\n");
 }
 
 void affresultTexte(char *chemin)
 {
+    int nbLig;
     printf("\n  ** Resultats trouvés pour la comparaison avec un fichier **\n");
-    recherche_comparaison_texte(chemin, 35); // 35?
-    printf("\n Taper 1 pour ouvrir le premier fichier\n");
+    nbLig = comptageNbLigne("/home/pfr/pfr_code/data/listeFichierTxt.txt");
+    recherche_comparaison_texte(chemin, nbLig);
+    
 }
 
 void affresultRGB(int R, int G, int B)
 {
     printf("\n  ** Resultats trouvés pour la recherche grâce aux composantes R:'%d', G:'%d', B:'%d' **", R, G, B);
-    // recherche RGB
-    printf("\n Taper 1 pour ouvrir le premier fichier\n");
+   
 }
 
 void affresultImageNB(char *fichier_retour, int image, float pourcentage)
 {
     printf("\n  ** Resultats trouvés pour la comparaison avec une image NetB **\n");
     recherchenoiretblanc(image, pourcentage, fichier_retour);
-    printf("\n Taper 1 pour ouvrir le premier fichier\n");
+    //interface();
+    //printf("\n Taper 1 pour ouvrir le premier fichier\n");
 }
 
 void affresultImageCoul(char *fichier_retour, int image, float pourcentage)
 {
     printf("\n  ** Resultats trouvés pour la comparaison avec une image Couleur **\n");
     recherchecouleur(image, pourcentage, fichier_retour);
-    printf("\n Taper 1 pour ouvrir le premier fichier\n");
+    //interface();
+    //printf("\n Taper 1 pour ouvrir le premier fichier\n");
 }
 
 void affresultSon()
@@ -126,12 +129,30 @@ void affconfig()
     int nb_modif;
     printf("\n  ** Modifier les configurations **\n\n");
     system("cat /home/pfr/pfr_code/config.txt");
-    printf("\n\n Que voulez vous modifier ?\nrentrer le numéro de ligne (début à 1) puis la valeur à mettre à la place\n");
+    printf("\n\n Que voulez vous modifier ?\nrentrer le numéro de ligne (début à 0) puis la valeur à mettre à la place\n");
     scanf("%d", &nb_lig);
     scanf("%d", &nb_modif);
+    char carac[50];
+    int nb;
+    char chaine[200];
+    int i=0;
+    FILE * config = fopen("/home/pfr/pfr_code/config.txt","r+");
+    system("echo '' > /home/pfr/pfr_code/data/modif_config.txt");
+    while(fscanf(config,"%d",&nb)==1){
+        fscanf(config,"%s",carac);
+        if(i==nb_lig){
+            nb=nb_modif;
+        }
+        snprintf(chaine,200,"echo '%d %s' >> /home/pfr/pfr_code/data/modif_config.txt",nb,carac);
+        system(chaine);
+        i++;
+    }
+    system("echo '' > /home/pfr/pfr_code/config.txt");
+    system("cat /home/pfr/pfr_code/data/modif_config.txt > /home/pfr/pfr_code/config.txt");
+    fclose(config);
 
     printf("\n  ** fichier mofifié **\n");
-    system("cat /home/pfr/pfr_code/config.txt");
+    system("cat /home/pfr/pfr_code/config.txt ");
 }
 
 void affvisudescripteurs()
@@ -141,19 +162,33 @@ void affvisudescripteurs()
 
 void affvisudescText()
 {
-    printf("\n  ** Descripteurs texte **\n");
+    /* printf("\n  ** Descripteurs texte **\n");
     printf("\n**** Descripteurs utiles pour la comparaison ****\n");
     system("cat /home/pfr/pfr/texte/descripteurs_textes/Base_Descripteur_Texte.txt");
     printf("\n**** Descripteurs utiles pour la recherche mot clef ****\n");
     system("cat /home/pfr/pfr/texte/descripteurs_textes/Table_Index_Texte.txt");
     printf("\n**** Identificateur des fichiers ****\n");
-    system("cat /home/pfr/pfr/texte/descripteurs_textes/Liste_Base_Texte.txt");
+    system("cat /home/pfr/pfr/texte/descripteurs_textes/Liste_Base_Texte.txt"); */
+    system("gedit /home/pfr/pfr/texte/descripteurs_textes/Base_Descripteur_Texte.txt &");
+    system("gedit /home/pfr/pfr/texte/descripteurs_textes/Table_Index_Texte.txt &");
+    system("gedit /home/pfr/pfr/texte/descripteurs_textes/Liste_Base_Texte.txt &");
 }
 
 void affvisudescImag()
 {
-    printf("\n  ** Descripteurs image **\n");
-    // afficher descripteurs
+    /* printf("\n  ** Descripteurs image **\n");
+    printf("\n**** Descripteurs pour les fichiers Noir et Blanc ****\n");
+    system("cat /home/pfr/pfr/image/descripteurs_images/base_descripteur_image_NB.txt");
+    printf("\n**** Identificateur des fichiers Noir et Blanc ****\n");
+    system("cat /home/pfr/pfr/image/descripteurs_images/bas_image_NB.txt");
+    printf("\n**** Descripteurs pour les fichiers Couleur ****\n");
+    system("cat /home/pfr/pfr/image/descripteurs_images/base_descripteur_image_couleur.txt");
+    printf("\n**** Identificateur des fichiers Couleur****\n");
+    system("cat /home/pfr/pfr/image/descripteurs_images/bas_image_couleur.txt"); */
+    system("gedit /home/pfr/pfr/image/descripteurs_images/base_descripteur_image_NB.txt &");
+    system("gedit /home/pfr/pfr/image/descripteurs_images/base_descripteur_image_couleur.txt &");
+    system("gedit /home/pfr/pfr/image/descripteurs_images/base_image_couleur.txt &");
+    system("gedit /home/pfr/pfr/image/descripteurs_images/base_image_NB.txt &");
 }
 
 void affvisudescSon()
@@ -168,6 +203,7 @@ void indexation()
     // supprimer les fichiers avant de faire l'indexation //A FAIRE
     printf("\n  ** Indexation **\n Saisir le chemin des fichiers que vous voulez indexer:\n");
     scanf("%s", chemin);
+    system("rm /home/pfr/pfr/texte/fich_textes/*.xml");
     tri_fich(chemin);
     // indexation texte
     printf("\n***** indexation texte *****\n");
@@ -196,8 +232,10 @@ void modeUtil()
             affrechTextMotClef(); // menu recherche texte - mot clef
             scanf("%s", mot);
             affresultMotClef(mot);
-            scanf("%d", &choix);
             open_fich();
+            printf("\n Taper sur une touche pour retourner au menu principal\n");
+            scanf("%d", &choix);
+            interface();
             break;
         case 2:
             char chemin[150];
@@ -207,7 +245,9 @@ void modeUtil()
             snprintf(chaine, 256, "cp %s.xml /home/pfr/pfr/texte/recherche_texte", chemin);
             system(chaine);
             affresultTexte(chemin);
+            printf("\n Taper sur une touche pour retourner au menu principal\n");
             scanf("%d", &choix);
+            interface();
             // open fichier
             break;
         case 0:
@@ -242,8 +282,8 @@ void modeUtil()
             float pourcentage;
             FILE *base;
             int id;
-            char *nom;
-            char *fich;
+            char nom[150];
+            char fich[256]={0};
             affrechImagImag(); // menu recherche image - image
             scanf("%d", &choix);
             switch (choix)
@@ -260,7 +300,7 @@ void modeUtil()
                 printf("\nPourcentage minimum de ressemblance ? (entre 0 et 100)\n");
                 scanf("%f", &pourcentage);
 
-                base = fopen("/home/pfr/pfr/image/descripteurs_images/base_image_couleur.txt", "r");
+                base = fopen("/home/pfr/pfr/image/descripteurs_images/base_image_NB.txt", "r");
                 while (fscanf(base, "%d", &id) == 1)
                 {
                     fscanf(base, "%s", nom);
@@ -271,10 +311,11 @@ void modeUtil()
                     }
                 }
                 fclose(base);
-
                 affresultImageNB(fich, id, pourcentage);
-                scanf("%d", &choix);
                 open_image_nb(fich);
+                printf("\n Taper sur une touche pour retourner au menu principal\n");
+                scanf("%d", &choix);
+                interface();
                 break;
 
             case 2:
@@ -303,8 +344,10 @@ void modeUtil()
                 fclose(base);
 
                 affresultImageCoul(fich, id, pourcentage);
-                scanf("%d", &choix);
                 open_image_coul(fich);
+                printf("\n Taper sur une touche pour retourner au menu principal\n");
+                scanf("%d", &choix);
+                interface();
                 break;
             default:
                 break;
@@ -345,6 +388,9 @@ void modeAdm()
     {
     case 1:
         affconfig();
+        printf("\n Taper sur une touche pour retourner au menu principal\n");
+        scanf("%d", &choix);
+        modeAdm();
         break;
     case 2:
         affvisudescripteurs();
@@ -353,12 +399,21 @@ void modeAdm()
         {
         case 1:
             affvisudescText();
+            printf("\n Taper sur une touche pour retourner au menu principal\n");
+            scanf("%d", &choix);
+            modeAdm();
             break;
         case 2:
             affvisudescImag();
+            printf("\n Taper sur une touche pour retourner au menu principal\n");
+            scanf("%d", &choix);
+            modeAdm();
             break;
         case 3:
             affvisudescSon();
+            printf("\n Taper sur une touche pour retourner au menu principal\n");
+            scanf("%d", &choix);
+            modeAdm();
             break;
         case 0:
             modeAdm();

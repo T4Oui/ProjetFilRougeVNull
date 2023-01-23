@@ -1,7 +1,2 @@
 
-/home/pfr/pfr/texte/fich_textes/10-Le_cyclone_Katrina_complique_le_utf8.xml
-/home/pfr/pfr/texte/fich_textes/16-Une_sonde_japonaise_va_tenter_utf8.xml
-/home/pfr/pfr/texte/fich_textes/22-Des_laboureurs,_des_OGM..._et_utf8.xml
-/home/pfr/pfr/texte/fich_textes/28-A_Hossegor,_Kelly_Slater_peut_utf8.xml
-/home/pfr/pfr/texte/fich_textes/28-Danse___Robyn_Orlin_et_utf8.xml
 /home/pfr/pfr/texte/fich_textes/29-Ligue_des_champions___Lyon_utf8.xml
