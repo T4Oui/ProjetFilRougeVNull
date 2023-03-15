@@ -1,19 +1,48 @@
-testgen : ./son/src/indexationV3.c ./son/include/descripteurV3.h  ./son/src/fct_histogrammeV3.c ./son/include/histogrammeV3.h ./src/interface.c ./texte/src/recherche_mot_clef.c ./image/src/recherche_image.c ./image/src/indexation_image.c ./image/include/indexation_image.h ./include/interface.h ./texte/include/recherche_mot_clef.h ./texte/src/tok.c ./texte/include/tok.h ./texte/src/clean.c ./texte/include/tok.h ./texte/src/tok.c ./texte/src/indexation_texte.c ./texte/src/indexation_texte.c ./texte/src/descripteur_Txt.c ./texte/include/descripteur_Txt.h ./texte/src/pile_dynamique.c ./texte/include/pile_dynamique.h ./src/tri_fich.c ./include/tri_fich.h ./src/main.c ./texte/src/recherche_texte.c ./texte/include/recherche_texte.h ./texte/include/table_index.h ./texte/src/table_index.c ./texte/include/piles2.h ./texte/src/piles2.c
-	gcc -c ./src/tri_fich.c
-	gcc -c ./texte/src/indexation_texte.c 
-	gcc -c ./texte/src/tok.c
-	gcc -c ./texte/src/clean.c
-	gcc -c ./texte/src/descripteur_Txt.c
-	gcc -c ./texte/src/pile_dynamique.c
-	gcc -c ./texte/src/recherche_texte.c
-	gcc -c ./texte/src/piles2.c
-	gcc -c ./texte/src/table_index.c
-	gcc -c ./image/src/indexation_image.c 
-	gcc -c ./texte/src/recherche_mot_clef.c
-	gcc -c ./image/src/recherche_image.c
-	gcc -c ./src/interface.c
-	gcc -c ./src/main.c
-	gcc -c ./son/src/indexationV3.c
-	gcc -c ./son/src/fct_histogrammeV3.c
-	gcc -o testgen.out fct_histogrammeV3.o indexationV3.o interface.o recherche_mot_clef.o indexation_texte.o recherche_image.o clean.o tok.o descripteur_Txt.o indexation_image.o pile_dynamique.o tri_fich.o main.o recherche_texte.o table_index.o piles2.o -lm
-	./testgen.out
+# Compiler
+CC=gcc
+
+# Compiler flags
+CFLAGS=-W -Wall -std=c99 -pedantic
+
+# Linker flags
+LDFLAGS=-lm
+
+# Source directories
+SRC_DIR=./src
+TEXT_SRC_DIR=./texte/src
+IMAGE_SRC_DIR=./image/src
+SON_SRC_DIR=./son/src
+
+# Object directory
+OBJ_DIR=./obj
+
+# Object files
+OBJ_FILES=$(addprefix $(OBJ_DIR)/, fct_histogrammeV3.o indexationV3.o interface.o recherche_mot_clef.o indexation_texte.o recherche_image.o clean.o tok.o descripteur_Txt.o indexation_image.o pile_dynamique.o tri_fich.o main.o recherche_texte.o table_index.o piles2.o)
+
+# Main target
+TARGET=testgen.out
+
+# Default target
+all: $(TARGET)
+
+# Clean target
+clean:
+	rm -rf $(OBJ_FILES) $(TARGET)
+
+# Linking
+$(TARGET): $(OBJ_FILES)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+# Compilation
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) -c $< -o $@ $(CFLAGS)
+
+$(OBJ_DIR)/%.o: $(TEXT_SRC_DIR)/%.c
+	$(CC) -c $< -o $@ $(CFLAGS)
+
+$(OBJ_DIR)/%.o: $(IMAGE_SRC_DIR)/%.c
+	$(CC) -c $< -o $@ $(CFLAGS)
+
+$(OBJ_DIR)/%.o: $(SON_SRC_DIR)/%.c
+	$(CC) -c $< -o $@ $(CFLAGS)
+

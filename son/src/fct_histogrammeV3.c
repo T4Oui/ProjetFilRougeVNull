@@ -11,7 +11,7 @@ int intervalle = 0 ; // intervalle est l'indice de l'intervalle entre borne_sup 
 double borne_inf;
 double borne_sup;
 
-int cp_intervalle ;  //!!!!!! A SUPPRIMER
+
 borne_inf = -1; // initialisée au minimum -1
 
 while (borne_inf < 1 ){
@@ -19,7 +19,6 @@ while (borne_inf < 1 ){
             if ( echant < borne_sup && echant >= borne_inf){
                 h.tab [intervalle] = h.tab [intervalle]+1;
                 //histo = h.tab [intervalle] ;
-                cp_intervalle = intervalle; //!!!!!! A SUPPRIMER
                 intervalle = 0; // on reinitialise l'intervalle a 0 pour le prochain echantillon
                 break;
             }

@@ -66,8 +66,9 @@ void open_fich(){
     fclose(fich);
 }
 
-
+/*
 void main(int argc,char **argv){
 
     rech_MC(argv[1]);
 }
+*/
