@@ -1,4 +1,4 @@
-testgen : ./src/interface.c ./texte/src/recherche_mot_clef.c ./image/src/recherche_image.c ./image/src/indexation_image.c ./image/include/indexation_image.h ./include/interface.h ./texte/include/recherche_mot_clef.h ./texte/src/tok.c ./texte/include/tok.h ./texte/src/clean.c ./texte/include/tok.h ./texte/src/tok.c ./texte/src/indexation_texte.c ./texte/src/indexation_texte.c ./texte/src/descripteur_Txt.c ./texte/include/descripteur_Txt.h ./texte/src/pile_dynamique.c ./texte/include/pile_dynamique.h ./src/tri_fich.c ./include/tri_fich.h ./src/main.c ./texte/src/recherche_texte.c ./texte/include/recherche_texte.h ./texte/include/table_index.h ./texte/src/table_index.c ./texte/include/piles2.h ./texte/src/piles2.c
+testgen : ./son/src/indexationV3.c ./son/include/descripteurV3.h  ./son/src/fct_histogrammeV3.c ./son/include/histogrammeV3.h ./src/interface.c ./texte/src/recherche_mot_clef.c ./image/src/recherche_image.c ./image/src/indexation_image.c ./image/include/indexation_image.h ./include/interface.h ./texte/include/recherche_mot_clef.h ./texte/src/tok.c ./texte/include/tok.h ./texte/src/clean.c ./texte/include/tok.h ./texte/src/tok.c ./texte/src/indexation_texte.c ./texte/src/indexation_texte.c ./texte/src/descripteur_Txt.c ./texte/include/descripteur_Txt.h ./texte/src/pile_dynamique.c ./texte/include/pile_dynamique.h ./src/tri_fich.c ./include/tri_fich.h ./src/main.c ./texte/src/recherche_texte.c ./texte/include/recherche_texte.h ./texte/include/table_index.h ./texte/src/table_index.c ./texte/include/piles2.h ./texte/src/piles2.c
 	gcc -c ./src/tri_fich.c
 	gcc -c ./texte/src/indexation_texte.c 
 	gcc -c ./texte/src/tok.c
@@ -13,5 +13,7 @@ testgen : ./src/interface.c ./texte/src/recherche_mot_clef.c ./image/src/recherc
 	gcc -c ./image/src/recherche_image.c
 	gcc -c ./src/interface.c
 	gcc -c ./src/main.c
-	gcc -o testgen.out interface.o recherche_mot_clef.o indexation_texte.o recherche_image.o clean.o tok.o descripteur_Txt.o indexation_image.o pile_dynamique.o tri_fich.o main.o recherche_texte.o table_index.o piles2.o -lm
+	gcc -c ./son/src/indexationV3.c
+	gcc -c ./son/src/fct_histogrammeV3.c
+	gcc -o testgen.out fct_histogrammeV3.o indexationV3.o interface.o recherche_mot_clef.o indexation_texte.o recherche_image.o clean.o tok.o descripteur_Txt.o indexation_image.o pile_dynamique.o tri_fich.o main.o recherche_texte.o table_index.o piles2.o -lm
 	./testgen.out

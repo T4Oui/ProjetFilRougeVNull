@@ -16,17 +16,17 @@ int tab_taille_couleur(int config,int noiroublanc)
         else if ((config==3)&&(noiroublanc==0))
         {
 
-            taille=512; // 128 valeurs et l'identificateur stocké ailleurs
+            taille=512; // 512 valeurs et l'identificateur stocké ailleurs
         }
         else if ((config==2)&&(noiroublanc==1))
         {
 
-            taille=4; // 128 valeurs et l'identificateur stocké ailleurs
+            taille=4; // 4 valeurs et l'identificateur stocké ailleurs
         }
         else if ((config==3)&&(noiroublanc==1))
         {
 
-            taille=8; // 128 valeurs et l'identificateur stocké ailleurs
+            taille=8; // 8 valeurs et l'identificateur stocké ailleurs
         }
         return taille;
 }
@@ -35,8 +35,8 @@ int tab_taille_couleur(int config,int noiroublanc)
  int configurationR  (FILE* fichier)
  {
   int carac=0;
-  fseek(fichier,35,SEEK_SET); //permet de placer le curseur au niveau du caractère 13 (valeur de quantification) 
-  fscanf(fichier,"%d",&carac); // lis le caractère au niveau du curseu
+  fseek(fichier,35,SEEK_SET); //permet de placer le curseur au niveau du caractère 35 (valeur de quantification) 
+  fscanf(fichier,"%d",&carac); // lis le caractère au niveau du curseur
   return carac;
   }
 
@@ -49,7 +49,7 @@ float pourcentage(float partie,int total)
  int intersection (int* tab1, int* tab2 ,int taille)
  {
     int val1=0, val2=0 , total=0 ;
-    for (int i = 0; i < taille; i++)// on commence à 1 pour ne pas traiter la première case du tableau car elle contient l'identifiant et non pas une valeur de l'histogramme
+    for (int i = 0; i < taille; i++)// on parcourt toute les cases du tableau 
 
     {
         val1 = *(tab1+i); //pointeur sur le contenu de l'adresse (on incrémente l'adresse de i pour parcourir toutes les cases du tableau)
@@ -58,11 +58,10 @@ float pourcentage(float partie,int total)
         {
             total=total+val1; //on fait la somme des minimums afin d'obtenir à la fin un total représentant ce qu'il y a en commun entre les deux histogramme
         }
-        else //if (val2<val1)
+        else 
         {
             total=total+val2;
         }
-    // si les valeurs sont égales on ajoute la valeur au total
     }
     return total;
  }
@@ -70,18 +69,14 @@ float pourcentage(float partie,int total)
  void remplissagestructure (TAB* tableau,int bit_quantification, FILE* base_descripteur_image,int noiroublanc)
  {
     int string=0;
-    tableau->nb_valeur=tab_taille_couleur(bit_quantification,noiroublanc);
+    tableau->nb_valeur=tab_taille_couleur(bit_quantification,noiroublanc); // on récupère le nombre de valeurs grâce à tab_taillecouleur
     fscanf(base_descripteur_image,"%d",&string);
     tableau->identifiant=string; //l'identificateur est stocké dans un champ réservé pour lui dans la structure
     for(int i =0;i<tableau->nb_valeur;i++)
     {
         fscanf(base_descripteur_image,"%d",&string);
         tableau -> T[i] = string; // le tableau contient seulement les valeurs de chaque couleur
-       // printf("%d",tableau->T[i]);
-        //printf("%d\t",tableau->T[i]);
     } 
-    //printf("\n \n");
-    //return tableau;
  }
 
 void remplissagetab (TAB* tableau1,int nbdescripteurs,int noiroublanc)
@@ -92,42 +87,18 @@ void remplissagetab (TAB* tableau1,int nbdescripteurs,int noiroublanc)
         FILE* base_descripteur_image = fopen("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_couleur.txt","r");
         FILE* config = fopen("/home/pfr/pfr_code/config.txt","r");
         int nb=configurationR(config);
-
-        //TAB* tableau=(TAB*)malloc(sizeof(struct TAB)*nbdescripteurs);
-      // printf("\n%d TEST NOMBRE DESCRIPTEUR\n",nbdescripteurs);
-
         for(int i=0;i<nbdescripteurs;i++)    
         {
-            remplissagestructure((tableau1+i),nb,base_descripteur_image,noiroublanc);
-                for(int i =0;i<tableau1->nb_valeur;i++)
-    {
-       // printf("%d\t",tableau1->identifiant);
-        //printf("%d\t",tableau->T[i]);
-    }
-            //printf("%d TEST ULTIME xfyxtf\n",(tableau)->T[i]);
-
-            //tableau=remplissagestructure(tableau,nb,base_descripteur_image,noiroublanc);
-        }
-          for(int i =0;i<63;i++)
-    {
-       // printf("%d",tableau->T[i]);
-        //printf("%d\t",tableau->T[i]);
-    } 
-        //printf("%d TEST ULTIME",(tableau)->identifiant);
-       // printf("\n");
+            remplissagestructure((tableau1+i),nb,base_descripteur_image,noiroublanc); //pour chaque descripteur on remplit sa structure
+        } 
         fclose(base_descripteur_image);
         fclose(config);
-      //  return tableau;
-        //free(tableau);
-
     }
     else
     {
         FILE* base_descripteur_image = fopen("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_NB.txt","r");
         FILE* config = fopen("/home/pfr/pfr_code/config.txt","r");
         int nb=configurationR(config);
-
-       // printf("%d\t%d\n",nb,noiroublanc);
         for(int i=0;i<nbdescripteurs;i++)    
         {
 
@@ -135,21 +106,18 @@ void remplissagetab (TAB* tableau1,int nbdescripteurs,int noiroublanc)
         }
         fclose(base_descripteur_image);
         fclose(config);
-        //return tableau;
-        //free(tableau);
     }
  }
 
 void affichagetab (TAB*tableau, int tailletableau)
 {
-   // printf("\n");
 for(int j=0;j<tailletableau;j++)
 {
     for (int i = 0; i < 63; i++)
     {
-        //printf("%d",(tableau+j)->T[i]); //permet d'afficher toutes les valeurs des nbdescripteurs utile pour
+        printf("%d",(tableau+j)->T[i]); //permet d'afficher toutes les valeurs des nbdescripteurs utile pour le débuggage
     }
-     //printf("\n\n");
+    printf("\n\n");
 }   
 }
 int compterlignes(FILE* fichier)
@@ -164,18 +132,6 @@ while((c=fgetc(fichier)) != EOF) // on étudie tous les caractères du fichier
     }
 }
 return nblig;
-}
-
-//30000 couleur 4000 couleur;
-int couleurougris(TAB* descripteur)
-{
-    /*if((descripteur->identifiant>=3000)&&descripteur->identifiant<4000)
-        //comparaison_couleur();
-    //else
-        //comparaison_couleur();
-    return 1;
-    */
-   return 1;
 }
 
 
@@ -198,51 +154,34 @@ void comparaison_couleur(TAB* descripteur, int identifiant, int nbdescripteurs)
                 {
                     somme=intersection((descripteur+i)->T,(descripteur+j)->T,((descripteur+j)->nb_valeur));
                     (descripteur+j)->pourcentage=pourcentage(somme,((descripteur)+i)->total);
-                   // printf("%f\n",(descripteur+j)->pourcentage);
-
                 }
 
 
             }
         }
     }
-    //return tab;
 
 
 }
 
- void comparaison_noirblanc(FILE* fichier)
- {
-
- }
 
  void malloc_structure(TAB* tab,int nbdescripteurs)
  {
     for(int i=0;i<nbdescripteurs;i++)
     {
-//         int taille = tab_taille_couleur(2,0);
         (tab+i)->T=(int*)malloc(sizeof(int)*(tab->nb_valeur));
         for(int j=0;j<tab->nb_valeur;j++)
         {
-               (tab+i)->T[j]=0;
-              // printf("%d",(tab+i)->T[j]);
+               (tab+i)->T[j]=0;          // cela permet d'allouer la mémoir popur le tableau de chaque descripteur
         }
-       // printf("\n");
-        
-        //TAB* tableau1=(TAB*)malloc(sizeof(struct TAB)*(nbdescripteurs)); //crée un tableau de la taille nombre de descripteur
-
-
     }
-    //TAB* tableau1=(TAB*)malloc(sizeof(struct TAB)*(nbdescripteurs)); //crée un tableau de la taille nombre de descripteur
  }
  void free_structure(TAB* tab,int nbdescripteurs)
  {
         for(int j=0;j<nbdescripteurs;j++)
         {
-            free(((tab+j)->T));
+            free(((tab+j)->T)); // permet de free la première case de chaque tableau
         }
-                
-
 }
 
 
@@ -253,7 +192,7 @@ void comparaison_couleur(TAB* descripteur, int identifiant, int nbdescripteurs)
         int somme=0;
         for (int i = 0; i < (descripteur+j)->nb_valeur; i++)
         {
-            somme=somme+((descripteur+j)->T[i]);
+            somme=somme+((descripteur+j)->T[i]);      // calcul simplement le total
         }
         (descripteur+j)->total=somme;
 
@@ -263,9 +202,8 @@ void comparaison_couleur(TAB* descripteur, int identifiant, int nbdescripteurs)
 
 void afficher_pourcentage(STRUCTPOURC* tableau2, int nbdescripteurs, float pourcentagemini)
     {
-        for(int t=nbdescripteurs-1;t>=1;t--)
-        {
-            if(tableau2[t].pourcentage>pourcentagemini)
+        for(int t=nbdescripteurs-1;t>=1;t--) 
+        {            if(tableau2[t].pourcentage>=pourcentagemini)
             {
                 printf("%s\t%f\n",tableau2[t].fichier,(tableau2[t]).pourcentage);
             }
@@ -284,7 +222,7 @@ for(i=0;i<nbdescripteurs-1;i++)
     {
 
     
-        if ( tableau2[i].pourcentage > tableau2[j].pourcentage ) 
+        if ( tableau2[i].pourcentage > tableau2[j].pourcentage )  // tri structures en fonction de la valeur de leur pourcentage
         {
             c = tableau2[i].pourcentage;
             d=tableau2[i].identifiant;
@@ -327,23 +265,11 @@ int comptageNbLigne(char * pathFile){
     int nbdescripteurs=0;
         if(noiroublanc==0)
     {
-        //FILE* base_descripteur_image=fopen("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_couleur.txt","r");
-        //nbdescripteurs=compterlignes(base_descripteur_image);//récupère le nb de lignes cad le nb de descripteur
         nbdescripteurs = comptageNbLigne("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_couleur.txt");
-       // printf("%d",nbdescripteurs);
-       // printf("Hello world\n\n\n");
-
-        //printf("%d\n\n\n",nbdescripteurs);
-        //fclose(base_descripteur_image);
     }
     else
     {
         nbdescripteurs = comptageNbLigne("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_NB.txt");
-        //FILE* base_descripteur_noiroublanc=fopen("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_noiroublanc.txt","r");
-        //nbdescripteurs=compterlignes(base_descripteur_noiroublanc);
-        //printf("%d\n\n\n",nbdescripteurs);
-        //fclose(base_descripteur_noiroublanc);
-
     }
     return nbdescripteurs;
 
@@ -358,7 +284,7 @@ int comptageNbLigne(char * pathFile){
     while (fscanf(fich,"%d",&id_courant) == 1)
         {
             fscanf(fich,"%s",chemin);
-            if(id_courant==tableau2[nbdescripteurs-1].identifiant)//tailletab-1 car la structure du fichier recherché est toujours dans le tableau et on ne  veut pas afficher le pourcentage de ressemblance d'un fichier avec lui-même
+            if(id_courant==tableau2[nbdescripteurs-1].identifiant)//nbdescripteurs-1 car la structure du fichier recherché est toujours dans le tableau et on ne  veut pas afficher le pourcentage de ressemblance d'un fichier avec lui-même
             {
                 printf("%s\n",chemin);
             }
@@ -375,7 +301,7 @@ int comptageNbLigne(char * pathFile){
     while (fscanf(fich,"%d",&id_courant) == 1)
         {
             fscanf(fich,"%s",chemin);
-            if(id_courant==tableau2[nbdescripteurs-1].identifiant)//tailletab-1 car la structure du fichier recherché est toujours dans le tableau et on ne  veut pas afficher le pourcentage de ressemblance d'un fichier avec lui-même
+            if(id_courant==tableau2[nbdescripteurs-1].identifiant)//nbdescripteurs-1 car la structure du fichier recherché est toujours dans le tableau et on ne  veut pas afficher le pourcentage de ressemblance d'un fichier avec lui-même
             {
                 printf("%s\n",chemin);
             }
@@ -400,10 +326,14 @@ void recherchenoiretblanc(int fichierrecherche, float pourcentagemini,char* fich
     comparaison_couleur( tableau1,fichierrecherche,nbdescripteurs);
     STRUCTPOURC tableau2[nbdescripteurs]; //crée un tableau de la taille nombre de descripteur
     remplissagetabpourcent(tableau2,tableau1,nbdescripteurs);
+    for(int i=0;i<nbdescripteurs;i++)
+    {
+        if(tableau2[i].identifiant==fichierrecherche)
+        {
+            tableau2[i].pourcentage=0;
+        }
+    }
     tri(tableau2,nbdescripteurs);
-    //printf("test tri\n");
-    //afficher_pourcentage(tableau2,nbdescripteurs,pourcentagemini);
-    //afficher_resultat_noiroublanc(tableau2,nbdescripteurs);
     recupfichier_noiroublanc(tableau2,nbdescripteurs);
     afficher_pourcentage(tableau2,nbdescripteurs,pourcentagemini);
     fclose(config);
@@ -421,23 +351,22 @@ void recherchecouleur(int fichierrecherche, float pourcentagemini, char* fichier
     TAB* tableau1=(TAB*)malloc(sizeof(struct TAB)*(nbdescripteurs)); //crée un tableau de la taille nombre de 
     bit_config=configurationR(config);
     tableau1->nb_valeur=tab_taille_couleur(bit_config,noiroublanc);
-    //printf("%d",bit_config);
     malloc_structure(tableau1,nbdescripteurs);
     remplissagetab(tableau1,nbdescripteurs, noiroublanc);
     total(tableau1,nbdescripteurs);
     comparaison_couleur( tableau1,fichierrecherche,nbdescripteurs);
     STRUCTPOURC tableau2[nbdescripteurs]; //crée un tableau de la taille nombre de descripteur
     remplissagetabpourcent(tableau2,tableau1,nbdescripteurs);
+    for(int i=0;i<nbdescripteurs;i++)
+    {
+        if(tableau2[i].identifiant==fichierrecherche)
+        {
+            tableau2[i].pourcentage=0;
+        }
+    }
     tri(tableau2,nbdescripteurs);
-    //afficher_pourcentage(tableau2,nbdescripteurs,pourcentagemini);
-    //afficher_resultat_couleur(tableau2,nbdescripteurs);
     recupfichier_couleur(tableau2, nbdescripteurs);
-    // for(int i=0;i<nbdescripteurs;i++)
-    // {
-    //     printf("%s",tableau2[i].fichier);
-    // }
     afficher_pourcentage(tableau2,nbdescripteurs,pourcentagemini);
-    //afficher_resultat_couleur(tableau2,nbdescripteurs);
     fclose(config);
     strcpy(fichier,tableau2[nbdescripteurs-1].fichier);
     free_structure(tableau1,nbdescripteurs);
@@ -457,10 +386,7 @@ void recupfichier_couleur (STRUCTPOURC* tab,int nbdescripteurs)
                         fscanf(fich,"%s",((tab+j)->fichier));
                     }
                 }
-            }
-
-          
-        
+            }   
     fclose(fich);
 
 }
@@ -480,10 +406,7 @@ void recupfichier_noiroublanc (STRUCTPOURC* tab,int nbdescripteurs)
 
                     }
                 }
-            }
-
-          
-        
+            } 
     fclose(fich);
 
 }

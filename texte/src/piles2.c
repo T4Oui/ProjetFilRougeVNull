@@ -36,6 +36,7 @@ MotTable addM(MotTable p, char *mot)
 {
     MotTable paux = (MotTable)malloc(sizeof(Cel2));
     snprintf(paux->mot, sizeof(paux->mot), "%s", mot);
+    paux->nbMot=0;
     paux->table = NULL;
     paux->motTableSuiv = p;
     return paux;
@@ -62,12 +63,14 @@ MotTable add(MotTable p, int nb, char *mot, int fich)
         {
             p = addM(p, mot);
             p->table = addT(p->table, fich, nb);
+            p->nbMot++;
         }
         else
         {
             if (posC2->table->fich != fich)
             {
                 posC2->table = addT(posC2->table, fich, nb);
+                posC2->nbMot++;
             }
         }
     }
@@ -81,6 +84,8 @@ void aff(MotTable p)
     {
         // printf("%s\n",p->mot);
         snprintf(chaine, 256, "echo '%s' >> /home/pfr/pfr/texte/descripteurs_textes/Table_Index_Texte.txt", p->mot);
+        system(chaine);
+        snprintf(chaine, 256, "echo '%d' >> /home/pfr/pfr/texte/descripteurs_textes/Table_Index_Texte.txt", p->nbMot);
         system(chaine);
         if (p->table != NULL)
         {

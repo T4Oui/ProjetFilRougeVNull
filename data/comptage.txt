@@ -1,1 +1,1 @@
-40 /home/pfr/pfr_code/traitement/29-Ligue_des_champions___Lyon_utf8.tok
+661 /home/pfr/pfr/image/descripteurs_images/base_descripteur_image_couleur.txt

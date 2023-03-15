@@ -1,0 +1,6 @@
+corpus_fi.wav
+jingle_fi.wav
+corpus_fi.bin
+jingle_fi.bin
+corpus_fi.txt
+jingle_fi.txt

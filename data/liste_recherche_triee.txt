@@ -1,2 +1,5 @@
 
+/home/pfr/pfr/texte/fich_textes/03-Mimer_un_signal_nerveux_pour_utf8.xml
+/home/pfr/pfr/texte/fich_textes/27-Le_Stade_de_France_s_ouvre_utf8.xml
+/home/pfr/pfr/texte/fich_textes/28-A_Hossegor,_Kelly_Slater_peut_utf8.xml
 /home/pfr/pfr/texte/fich_textes/29-Ligue_des_champions___Lyon_utf8.xml

@@ -2,4 +2,4 @@
 2 NbOccurTXT
 3 TminTXT
 2 NbOccurIM
-2 NbitIM
+3 NbitIM

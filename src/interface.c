@@ -10,12 +10,12 @@
 
 void affMP()
 {
-    printf("\n\n\n    ** Menu Principal **\nTaper 1: mode Utilisateur\nTaper 2: mode Administrateur\n");
+    printf("\n\n\n    ** Menu Principal **\nTaper 1: mode Utilisateur\nTaper 2: mode Administrateur\nTaper 9: quitter\n");
 }
 
 void affUtil()
 {
-    printf("\n  ** Mode Utilisateur **\nQue voulez-vous chercher?\n1: Un texte\n2: Une image\n3: Un son\n0: revenir au menu principal\n");
+    printf("\n  ** Mode Utilisateur **\nQue voulez-vous chercher?\n1: Un texte\n2: Une image\n3: Un son\n0: revenir au menu principal\n9: quitter\n");
 }
 
 void affrechText()
@@ -115,12 +115,12 @@ void affAdm()
 
 void affmdp()
 {
-    printf("\n  ** Mode Administrateur **\nMot de passe erroné    Mot de passe?\n(Taper 0: revenir au menu principal)\n");
+    printf("\n  ** Mode Administrateur **\nMot de passe erroné    Mot de passe?\n");
 }
 
 void affmodeAdm()
 {
-    printf("\n  ** Mode Administrateur **\n1: modifier les configurations\n2: visualiser le contenu des descripteurs\n3: effectuer une recherche\n4: faire l'indexation\n0: revenir au menu principal\n");
+    printf("\n  ** Mode Administrateur **\n1: modifier les configurations\n2: visualiser le contenu des descripteurs\n3: effectuer une recherche\n4: faire l'indexation\n0: revenir au menu principal\n9: quitter\n");
 }
 
 void affconfig()
@@ -149,6 +149,7 @@ void affconfig()
     }
     system("echo '' > /home/pfr/pfr_code/config.txt");
     system("cat /home/pfr/pfr_code/data/modif_config.txt > /home/pfr/pfr_code/config.txt");
+    system("sed -i '1d' /home/pfr/pfr_code/config.txt");
     fclose(config);
 
     printf("\n  ** fichier mofifié **\n");
@@ -195,24 +196,36 @@ void affvisudescSon()
 {
     printf("\n  ** Descripteurs son **\n");
     // afficher descripteurs
+    //system("gedit /home/pfr/pfr/son/descripteurs_sons/basetxt &");
+    system("gedit /home/pfr/pfr/son/descripteurs_sons/liste.txt &");
+    system("gedit /home/pfr/pfr/son/descripteurs_sons/descripteur_corpus_fi.bin.txt &");
 }
 
 void indexation()
 {
     char chemin[250];
+    char verifChaine[256];
     // supprimer les fichiers avant de faire l'indexation //A FAIRE
-    printf("\n  ** Indexation **\n Saisir le chemin des fichiers que vous voulez indexer:\n");
-    scanf("%s", chemin);
-    system("rm /home/pfr/pfr/texte/fich_textes/*.xml");
+    do
+    {
+        printf("\n  ** Indexation **\n Saisir le chemin des fichiers que vous voulez indexer:\n");
+        scanf("%s", chemin);
+        int ret = snprintf(verifChaine,sizeof(verifChaine),"find %s > /home/pfr/pfr_code/data/erreur.txt 2>&1",chemin);
+        if(ret<0){
+            abort();
+        }
+    }while(system(verifChaine) !=0);
+    system("rm /home/pfr/pfr/texte/fich_textes/*.xml > /home/pfr/pfr_code/data/testFind.txt 2>&1");
     tri_fich(chemin);
     // indexation texte
     printf("\n***** indexation texte *****\n");
-    indexation_texte(); // ou est la pile?
+    indexation_texte(); 
     // indexation image
     printf("\n***** indexation image *****\n");
     indexation_image();
     // indexation son
     printf("\n***** indexation son *****\n");
+    indexation_son();
 }
 
 void modeUtil()
@@ -240,12 +253,13 @@ void modeUtil()
         case 2:
             char chemin[150];
             char chaine[256];
-            affrechTextText(); // menu recherche texte - texte
-            scanf("%s", chemin);
-            snprintf(chaine, 256, "cp %s.xml /home/pfr/pfr/texte/recherche_texte", chemin);
-            system(chaine);
+            do{
+                affrechTextText(); // menu recherche texte - texte
+                scanf("%s", chemin);
+                snprintf(chaine, 256, "cp %s.xml /home/pfr/pfr/texte/recherche_texte > /home/pfr/pfr_code/data/erreur.txt 2>&1 ", chemin);
+            }while(system(chaine)!= 0);
             affresultTexte(chemin);
-            printf("\n Taper sur une touche pour retourner au menu principal\n");
+            printf("\n Taper sur un chiffre pour retourner au menu principal\n");
             scanf("%d", &choix);
             interface();
             // open fichier
@@ -254,6 +268,7 @@ void modeUtil()
             interface();
             break;
         default:
+            affUtil();
             break;
         }
         break;
@@ -350,6 +365,7 @@ void modeUtil()
                 interface();
                 break;
             default:
+                affUtil();
                 break;
             }
             break;
@@ -357,6 +373,7 @@ void modeUtil()
             interface();
             break;
         default:
+        affUtil();
             break;
         }
         break;
@@ -374,7 +391,10 @@ void modeUtil()
     case 0:
         interface();
         break;
+    case 9:
+        break;
     default:
+        affUtil();
         break;
     }
 }
@@ -419,6 +439,7 @@ void modeAdm()
             modeAdm();
             break;
         default:
+            modeAdm();
             break;
         }
         break;
@@ -432,14 +453,17 @@ void modeAdm()
     case 0:
         interface();
         break;
+    case 9:
+        break;
     default:
+        modeAdm();
         break;
     }
 }
 
 void interface()
 {
-    int choix;
+    int choix ;
     affMP(); // menu principal
     scanf("%d", &choix);
     switch (choix)
@@ -462,7 +486,10 @@ void interface()
         }
         modeAdm();
         break;
+    case 9:
+        break;
     default:
+        interface();
         break;
     }
 }

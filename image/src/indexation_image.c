@@ -2,54 +2,57 @@
 #include <stdlib.h>
 #include <math.h>
 
-
-FILE* openFile( const char * nomFichier , const char * m ) // Fonction pour ouvrir le fichier avec le mode qu'il le prend en parapmetre 
+// Ouvrir le fichier avec le mode qui le prend en paramètre
+FILE* openFile( const char * nomFichier , const char * m ) 
 {
   FILE* file = fopen ( nomFichier , m) ; 
-  if (file == NULL ) { 
+  if (file == NULL ) //Vérification si le fichier est bien ouvert ou non
+  { 
     printf ( "error opening file ") ; 
   }
   return file ; 
 }
 
-int quantification (int tab[] , int b , int n ) // Fonction pour faire la quantification qui prend en parametre un tableau et renvoie la nouvelle valeur de pixel 
+
+// Fonction quantification qui prend en paramètre un tableau {R, V, B} si l'image est en couleur sinon {pixel, 0,0} et renvoie la nouvelle valeur de pixel
+int quantification (int tab[] , int b , int n ) 
 { 
 
-int t[7] ; 
-int nouPix = 0 ; 
+  int t[8] ;  
+  int nouPix = 0 ; 
+  int Nbr = (n *b)-1 ; //le nombre de bits nécessaire
+  int i = 0;  //compteur
+  while (( i<3) && (Nbr >=0 ))
+   { 
+    int a = tab[i] ; 
+    for (int j = 0 ; j<8 ; j ++) //codage décimal binaire d'un pixel 
+    {
+       t[j] = a % 2 ;
+       a = a / 2;
+    } 
+    if (n ==2)
+    { 
+       nouPix = nouPix + (t[7] * pow(2 , Nbr) )+ (t[6] * pow(2 , Nbr-1)) ;
+       Nbr = Nbr - 2 ;
+    } 
+    else if (n ==3)
+    { 
+      nouPix = nouPix + (t[7] * pow(2 , Nbr) )+ (t[6] * pow(2 , Nbr-1)) + (t[5] * pow(2 , Nbr-2)) ;
+      Nbr = Nbr - 3 ;
+    } 
+    i++ ; 
+    }
+  return ( nouPix) ; 
+} 
 
-int Nbr = (n *b)-1 ;
-int i = 0; 
-while (( i<3) && (Nbr >=0 ))
- { 
- int a = tab[i] ; 
- for (int j = 0 ; j<8 ; j ++)
- {
- t[j] = a % 2 ;
- a = a / 2;
- } 
- if (n ==2)
- { 
- nouPix = nouPix + (t[7] * pow(2 , Nbr) )+ (t[6] * pow(2 , Nbr-1)) ;
- Nbr = Nbr - 2 ;
- } 
- else if (n ==3)
- { nouPix = nouPix + (t[7] * pow(2 , Nbr) )+ (t[6] * pow(2 , Nbr-1)) + (t[5] * pow(2 , Nbr-2)) ;
- Nbr = Nbr - 3 ;
- } 
- i++ ; 
- }
- return ( nouPix) ; 
- 
- } 
-
- int ** pretraitement_image ( const char* fichier , int * ptrNBLIG , int * ptrNBCOL, int * ptrB  , int n)  // Fonction pour parcourir le fichier et appel la fonction quantification pour chaque pixel 
+//Parcourir le fichier image .txt, appeler la fonction quantification pour chaque pixel et retourne une matrice contenant tous les nouveaux pixels
+ int ** pretraitement_image ( const char* fichier , int * ptrNBLIG , int * ptrNBCOL, int * ptrB  , int n)  
 { 
   char chaine[256] = {0} ; 
   int ret = snprintf ( chaine , 256 ,"/home/pfr/pfr/image/fich_images/txt/%s" , fichier ) ;
   if ( ret < 0 )
        abort(); 
-    FILE* f = openFile( chaine , "r" );
+    FILE* f = openFile( chaine , "r" ); //ouvrir le fichier avec le mode lire
    
     fscanf(f,"%d" , ptrNBLIG);  // nombre de ligne 
     
@@ -60,9 +63,9 @@ while (( i<3) && (Nbr >=0 ))
 
     if ( APQ == NULL )
     { 
-      printf ("erreur ") ; 
-     exit(1); }
-
+     printf ("erreur ") ; 
+     exit(1); 
+    }
     int tab[3];
     if ( (*ptrB) !=3 ) // image N/B
     { 
@@ -77,33 +80,38 @@ while (( i<3) && (Nbr >=0 ))
                }
                } }
     else  // image en couleur 
-      {  int taille = (*ptrNBLIG) *(*ptrNBCOL) ;
-         int rouge[taille] ;
+      { int taille = (*ptrNBLIG) *(*ptrNBCOL) ;
+        int rouge[taille] ; 
         int vert [taille] ; 
         int bleu [taille] ; 
         int r =0 ;
         int v =0 ;
         int bl=0 ;
         for ( int i = 0 ;i<3 ;i++)
-          {
-            for ( int a =0 ; a<(*ptrNBLIG) ; a++ )
-         {  
+        {
+          for ( int a =0 ; a<(*ptrNBLIG) ; a++ )
+          {  
            APQ[a] = malloc( (*ptrNBCOL)*sizeof(int) );
            for (int b=0; b< (*ptrNBCOL); b++ ) 
            { 
-              if (i==0){ 
-                  fscanf(f,"%d", &rouge[r]); 
-                   r++ ; }
-              else if (i==1){ 
-                  fscanf(f,"%d", &vert[v]); 
-                   v++ ; }
-              else { 
-                  fscanf(f,"%d", &bleu[bl]); 
-                   bl++ ; }
-                
-           
+              if (i==0) 
+              { 
+                  fscanf(f,"%d", &rouge[r]); //tableau qui contient tous les composants rouges
+                   r++ ; 
+              }
+              else if (i==1)
+              { 
+                  fscanf(f,"%d", &vert[v]); //tableau qui contient tous les composants verts
+                   v++ ;
+              }
+              else 
+              { 
+                  fscanf(f,"%d", &bleu[bl]); //tableau qui contient tous les composants bleus
+                   bl++ ; 
+              }
            }
-         }}
+          }
+        }
         int t =0 ; 
 
         for ( int a =0 ; a<(*ptrNBLIG) ; a++ )
@@ -112,7 +120,7 @@ while (( i<3) && (Nbr >=0 ))
                     tab [0] = rouge[t] ; 
                     tab[1] = vert [t];
                     tab[2] = bleu[t]; 
-                    APQ[a][b]= quantification ( tab , *ptrB , n) ; // tab = { pixel_rouge,pixel_vert,pixel_bleu}
+                    APQ[a][b]= quantification ( tab , *ptrB , n) ; // tab = { composant_rouge, composant_vert, composant_bleu}
                     t++;
                     }
         }
@@ -120,8 +128,8 @@ while (( i<3) && (Nbr >=0 ))
         fclose(f) ;
     return ( APQ ) ;  
       }
-
-int ** pretraitement_recherche ( const char* fichier , int * ptrNBLIG , int * ptrNBCOL, int * ptrB  , int n) // Fonction pour la recherche 
+// Fonction à utiliser dans la fonction indexation_recherche qui effectue le même traitement que la fonction pretraitement_image mais avec un autre chemin de fichier
+int ** pretraitement_recherche ( const char* fichier , int * ptrNBLIG , int * ptrNBCOL, int * ptrB  , int n) 
 { 
   char chaine[256] = {0} ; 
   int ret = snprintf ( chaine , 256 ,"/home/pfr/pfr/image/recherche_image/%s" , fichier ) ;
@@ -178,12 +186,10 @@ int ** pretraitement_recherche ( const char* fichier , int * ptrNBLIG , int * pt
               else { 
                   fscanf(f,"%d", &bleu[bl]); 
                    bl++ ; }
-                
-           
            }
-         }}
+         }
+        }
         int t =0 ; 
-
         for ( int a =0 ; a<(*ptrNBLIG) ; a++ )
             for (int b=0; b< (*ptrNBCOL); b++ ) 
                 {
@@ -200,19 +206,21 @@ int ** pretraitement_recherche ( const char* fichier , int * ptrNBLIG , int * pt
       }
 
 
-
-int histogramme ( int ** tab , int nbr , int * ptrNBLIG , int * ptrNBCOL)  // Fonction pour calculer nombre d'accurrence d'un pixel dans le matrice 
+// Calculer nombre d'occurrence d'un pixel dans la matrice
+int histogramme ( int ** matrice , int pixel , int * ptrNBLIG , int * ptrNBCOL)  
 {
      
-int acc = 0  ;
-for (int i = 0 ;i < *ptrNBLIG ; i++ )
+ int acc = 0  ;
+ for (int i = 0 ;i < *ptrNBLIG ; i++ )
        for ( int j =0 ; j < *ptrNBCOL ; j++)
-            if (tab[i][j] ==  nbr)
+            if (matrice[i][j] ==  pixel)
                  acc++ ;
 
-return acc ; }
+ return acc ; 
+}
 
-void mise_a_jour_base_image (  FILE* LBI , FILE* BDI, const char* f ,int*  descripteur , int n , int* d ) // Fonction pour faire le mise a jour des fichiers base_descripteur_image et base_image
+//Le mise à jour des fichiers base_descripteur_image.txt et base_image.txt pour chaque nouveau descripteur
+void mise_a_jour_base_image (  FILE* LBI , FILE* BDI, const char* f ,int*  descripteur , int n , int* d ) 
          {  int c = pow ( 2 , ((*d)*n) ) + 1 ; 
              fprintf (LBI, "%d  %s \n" , descripteur[0] ,f) ;  
              for  ( int i=0  ; i < c ; i++ )
@@ -221,93 +229,68 @@ void mise_a_jour_base_image (  FILE* LBI , FILE* BDI, const char* f ,int*  descr
          }
 
 
-
-int configuration (FILE* fichier)  //Fonction pour recupere le nombre de bits utilisés pour la quantification
-
+//Fonction pour recupere le nombre de bits utilisés pour la quantification
+int configuration (FILE* fichier) 
 {
   int carac=0;
-  fseek(fichier,35,SEEK_SET); //permet de placer le curseur au niveau du caractère 13 (valeur de quantification) 
+  fseek(fichier,35,SEEK_SET); //permet de placer le curseur au niveau du caractère 35 (valeur de quantification) 
   fscanf(fichier,"%d",&carac); // lis le caractère au niveau du curseu
   return carac;
-  }
- /* int nb;
-  char carac;
-  for(int i=0;i<4;i++){ // dans le config, la valeur voulue est à la ligne 4
-    fscanf(fichier,"%d",&nb); // lis le caractère au niveau du curseur
-    fscanf(fichier,"%s",&carac); 
-  }
-  return nb;*/
-
-int* descripteur_image ( int ** tab , int n , int * ptrNBCOL , int * ptrNBLIG , int * d) // Fonction pour construiure le descripteur 
-{
-int c = pow ( 2 , ((*d)*n) )  ; //  c+1 : taille d'un descripteur 
-int* D =  (int*) malloc ((c+1) *sizeof( int)); 
- D[0]=0 ; 
-for (int i = 0 ; i < c ; i++ ){ 
-    D[i+1] = histogramme( tab , i  , ptrNBLIG , ptrNBCOL) ; 
-    }
-  return D ; 
-} 
-int* indexation_recherche (const char * image )  // fonction pour la recherche  
-{      FILE* config = openFile("/home/pfr/pfr_code/config.txt" , "r" ); 
-         int  n = configuration(config); 
-         int NBLIG ;
-         int NBCOL ;
-         int id =  100 ; 
-         int d ; 
-         int ** tab = pretraitement_recherche(image , &NBLIG ,&NBCOL , &d  , n ) ; 
-         int * Descripteur = descripteur_image  ( tab , n , &NBCOL, &NBLIG , &d  ) ; 
-         if (d==3){ 
-         Descripteur[0]= 3000 + id;
-          }
-         else { 
-          Descripteur[0]= 4000 +id; 
-          }
-         for (int i = 0 ; i< NBLIG ;i++ )
-               free (tab[i]) ; 
-         free(tab) ;  
-         return (Descripteur) ;
 }
 
+//Crée un descripteur image .txt a partire d'une matrice 
+int* descripteur_image ( int ** matrice , int n , int * ptrNBCOL , int * ptrNBLIG , int * b) 
+{
+ int c = pow ( 2 , ((*b)*n) )  ; //  c+1 : taille d'un descripteur 
+ int* D =  (int*) malloc ((c+1) *sizeof( int));  
+ D[0]=0 ;  //Initialiser l'identifiant avec 0
+ for (int i = 0 ; i < c ; i++ ){ 
+    D[i+1] = histogramme( matrice , i  , ptrNBLIG , ptrNBCOL) ; 
+    }
+  return D ;
 
-void indexation_image () //Une fonction pour indexer le fichier image qui appelle toutes les fonctions précédentes
-{ 
+} 
+
+
+
+void indexation_image () { 
  int id =0 ; 
- char fileName[200] ;
- system("ls /home/pfr/pfr/image/fich_images/txt > /home/pfr/pfr_code/data/listeFichierImage.txt " ); 
+ char nomFichier[200] ;
+ system("ls /home/pfr/pfr/image/fich_images/txt > /home/pfr/pfr_code/data/listeFichierImage.txt " );  //Créé un fichier avec la liste des textes dans le répertoire 
  FILE * listeFichier = openFile("/home/pfr/pfr_code/data/listeFichierImage.txt","r") ; 
-  system("rm /home/pfr/pfr/image/descripteurs_images/*.txt");
+ system("rm /home/pfr/pfr/image/descripteurs_images/*.txt");
 
- while ( fscanf ( listeFichier ,"%s",fileName )==1)
+ while ( fscanf ( listeFichier ,"%s",nomFichier )==1) // Faire l'indexation de tous les fichiers
  { 
 
- printf ( "/home/pfr/pfr/image/fich_images/txt/%s\n",fileName);
+ printf ( "/home/pfr/pfr/image/fich_images/txt/%s\n",nomFichier);
  id++ ;
  FILE* config = openFile("/home/pfr/pfr_code/config.txt" , "r" ); 
  int n = configuration(config); 
  fclose(config);
- int NBLIG ;
- int NBCOL ;
- int d ; 
- int ** tab = pretraitement_image( fileName , &NBLIG ,&NBCOL , &d , n ) ; 
- int * Descripteur = descripteur_image ( tab , n , &NBCOL, &NBLIG , &d ) ; 
+ int NBLIG ; //nombre des lignes
+ int NBCOL ; //nombre des colonnes
+ int d ;  //nombre des composantes
+ int ** matrice = pretraitement_image( nomFichier , &NBLIG ,&NBCOL , &d , n ) ; 
+ int * Descripteur = descripteur_image ( matrice , n , &NBCOL, &NBLIG , &d ) ; 
  FILE* BDI = NULL ;
  FILE * LBI = NULL ;
- if (d==3){ 
+ if (d==3){ //image en couleur 
  Descripteur[0]= 3000 + id;
- BDI = openFile("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_couleur.txt" ,"a" ) ;
+ //Ouvrir les fichiers en mode écrire 
+ BDI = openFile("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_couleur.txt" ,"a" ) ; 
  LBI = openFile("/home/pfr/pfr/image/descripteurs_images/base_image_couleur.txt","a" ) ;
  }
  
- else { 
+ else {  //image en N/B
  Descripteur[0]= 4000 +id; 
  BDI = openFile("/home/pfr/pfr/image/descripteurs_images/base_descripteur_image_NB.txt" ,"a" ) ;
  LBI = openFile("/home/pfr/pfr/image/descripteurs_images/base_image_NB.txt","a" ) ;
  }
- mise_a_jour_base_image ( LBI , BDI, fileName, Descripteur , n , &d) ;
+ mise_a_jour_base_image ( LBI , BDI, nomFichier, Descripteur , n , &d) ;
  for (int i = 0 ; i< NBLIG ;i++ )
- free (tab[i]) ; 
- free(tab) ; 
+    free (matrice[i]) ; 
+ free(matrice) ; 
  free (Descripteur ) ; 
  
  fclose( BDI );
@@ -316,6 +299,29 @@ void indexation_image () //Une fonction pour indexer le fichier image qui appell
  fclose(listeFichier) ; 
 }
 
+
+//Fonction à utiliser dans la fonction recherche_image qui effectue le même traitement que la fonction indexation_image 
+//mais avec un seul fichier, sans faire le mise à jour des fichiers base_descripteur_image.txt et base_image.txt et retourne un descripteur 
+int* indexation_recherche (const char * image )  
+{      FILE* config = openFile("/home/pfr/pfr_code/config.txt" , "r" ); 
+         int  n = configuration(config); 
+         int NBLIG ;
+         int NBCOL ;
+         int id =  100 ; 
+         int d ; 
+         int ** matrice = pretraitement_recherche(image , &NBLIG ,&NBCOL , &d  , n ) ; 
+         int * Descripteur = descripteur_image  ( matrice , n , &NBCOL, &NBLIG , &d  ) ; 
+         if (d==3){ 
+         Descripteur[0]= 3000 + id;
+          }
+         else { 
+          Descripteur[0]= 4000 +id; 
+          }
+         for (int i = 0 ; i< NBLIG ;i++ )
+               free (matrice[i]) ; 
+         free(matrice) ;  
+         return (Descripteur) ;
+}
 
 
 
