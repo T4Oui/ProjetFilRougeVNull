@@ -74,7 +74,7 @@ DESCRIPT_TXT creerDescript(char * fileName, int ident,char * cheminRepertoireTok
 
     DESCRIPT_TXT descript = initDescript();
     char pathFile[256]={0};
-    char motRecup[256]={0};
+    //char motRecup[256]={0};
 
     descript.ident = ident;
     creerPileMot(&descript.pile_mot,fileName,&(descript.nb_mot_diff),ident,cheminRepertoireTok);

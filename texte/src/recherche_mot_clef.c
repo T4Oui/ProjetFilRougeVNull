@@ -49,7 +49,6 @@ void open_fich(){
     int ident;
     int id_courant;
     char chemin[150] ={0};
-    char chaine1[150] = {0};
     char chaine[150] = {0};
     FILE * rech = fopen("/home/pfr/pfr_code/data/rech_mot_clef_tri.txt","r");
     fscanf(rech,"%d",&ident);
@@ -66,9 +65,12 @@ void open_fich(){
     fclose(fich);
 }
 
-/*
-void main(int argc,char **argv){
 
+int main(int argc,char *argv[]){
+    //char chaine[100];
+    printf("mot clef %s\n",argv[1]);
     rech_MC(argv[1]);
+    //snprintf(chaine,100,"echo '%s' > /home/pfr/pfr_code/texte/src/resultat.txt",argv[1]);
+    //system(chaine);
+    return 0;
 }
-*/

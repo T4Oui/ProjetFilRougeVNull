@@ -21,6 +21,7 @@
 15-_Si_on_veut_aller_trop_utf8.xml
 15-Un_quasar_solitaire_bouleverse_les_utf8.xml
 16-Une_sonde_japonaise_va_tenter_utf8.xml
+18-Ligue_1___Lyon_a_utf8.xml
 22-Danse___quarante_jeunes_de_utf8.xml
 22-Des_laboureurs,_des_OGM..._et_utf8.xml
 22-Grippe_aviaire___la_course_utf8.xml

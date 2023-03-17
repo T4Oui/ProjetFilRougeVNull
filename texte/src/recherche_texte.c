@@ -165,3 +165,7 @@ void recherche_comparaison_texte(char * pathFileRecherchee, int nbFichierTxt){
     fclose(listeRechTriee);
 
 }
+
+int main(int argc, char * argv[]){
+    recherche_comparaison_texte(argv[1],atoi(argv[2]));
+}

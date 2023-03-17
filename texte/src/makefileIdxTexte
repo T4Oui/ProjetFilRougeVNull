@@ -1,0 +1,36 @@
+# Compiler
+CC=gcc
+
+# Compiler flags
+CFLAGS=-W -Wall -ansi -pedantic -std=c99
+
+# Linker flags
+LDFLAGS=
+
+# Source directory
+SRC_DIR=/home/pfr/pfr_code/texte/src
+
+# Object directory
+OBJ_DIR=/home/pfr/pfr_code/texte/obj
+
+# Object files
+OBJ_FILES=$(addprefix $(OBJ_DIR)/, clean.o descripteur_Txt.o indexation_texte.o pile_dynamique.o piles2.o table_index.o tok.o)
+
+# Main target
+TARGET=indexation_texte.o
+
+# Default target
+all: $(TARGET)
+
+# Clean target
+clean:
+	rm -rf $(OBJ_FILES) $(TARGET)
+
+# Linking
+$(TARGET): $(OBJ_FILES)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+# Compilation
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) -c $< -o $@ $(CFLAGS)
+

@@ -20,8 +20,8 @@ void indexation_texte(void){
 
     char fileName[256]={0};
     char pathFileSRC[256]={0};
-    char cheminListFich[256]={0};
-    char cheminFich[256]={0};
+    //char cheminListFich[256]={0};
+    //char cheminFich[256]={0};
     
     recupListeFichierTxt();
 
@@ -99,4 +99,8 @@ void ajoutListeBaseTxt(char * pathFileSRC, int ident){
         }
         else system(echoList);
     }
+}
+
+int main(int argc, char * argv[]){
+    indexation_texte();
 }
