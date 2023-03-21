@@ -1,6 +1,5 @@
 package modele;
 import com.sun.jna.Native;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -92,8 +91,8 @@ public interface LibraryImageMoteur extends Library{
     void tri(STRUCTPOURC tableau2, int nblignes);
     void remplissagetabpourcent(STRUCTPOURC tableau2, TAB tableau1, int nblignes);
     int nbdedescripteurs(int noiroublanc);
-    void recherchenoiretblanc(int fichierrecherche, float pourcentagemini, String fichier);
-    void recherchecouleur(int fichierrecherche, float pourcentagemini, String fichier);
+    void recherchenoiretblanc(int fichierrecherche, float pourcentagemini, Pointer fichier);
+    void recherchecouleur(int fichierrecherche, float pourcentagemini, Pointer fichier);
     TAB init_tableau(TAB tableau1, int nbdescripteurs);
     void recupfichier_couleur(STRUCTPOURC tab, int nbdescripteurs);
     void recupfichier_noiroublanc(STRUCTPOURC tab, int nbdescripteurs);
